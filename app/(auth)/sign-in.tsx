@@ -47,7 +47,9 @@ const SignIn = () => {
         secureTextEntry={true}
       />
 
-      <CustomButton title="Sign In" isLoading={isSubmitting} onPress={submit} />
+      <CustomButton title="Sign In" 
+      isLoading={isSubmitting} 
+      onPress={submit} />
 
       <View className="flex justify-center mt-5 flex-row gap-2">
         <Text className=" base-regular text-gray-100">

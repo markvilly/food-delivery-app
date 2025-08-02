@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import React from "react";
 import { Button, Text, View } from "react-native";
 
-const signUp = () => {
+const SignUp = () => {
   return (
     <View>
       <Text>sign up</Text>
@@ -11,4 +11,4 @@ const signUp = () => {
   );
 };
 
-export default signUp;
+export default SignUp;

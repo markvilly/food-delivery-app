@@ -1,17 +1,42 @@
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Alert, Text, View } from "react-native";
 
 const SignUp = () => {
-  const [isSubmitting, setIsSubmitting] = useState();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    verifyPassword: "",
+  });
 
-  const submit = async () => {};
+  const submit = async () => {
+    if (!form.name || !form.email || !form.password)
+      Alert.alert("Error", "Please fill out the rest of the form");
+
+    setIsSubmitting(true);
+    try {
+      Alert.alert("Success", "User Created Successfully");
+      router.replace("/");
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    } finally {
+    }
+  };
 
   return (
     <View className="gap-10 bg-white rounded-lg p-5 m-5">
+      <CustomInput
+        placeholder="Enter your Full Name"
+        value={form.name}
+        onChangeText={(text) => {
+          setForm((prev) => ({ ...prev, name: text }));
+        }}
+        label="Full Name"
+      />
       <CustomInput
         placeholder="Enter your email"
         value={form.email}
@@ -21,6 +46,7 @@ const SignUp = () => {
         label="Email"
         keyboardType="email-address"
       />
+
       <CustomInput
         placeholder="Enter your password"
         value={form.password}
@@ -33,9 +59,9 @@ const SignUp = () => {
 
       <CustomInput
         placeholder="Verify your password"
-        value={form.password}
-        onChangeText={(password) => {
-          setForm((prev) => ({ ...prev, password: password }));
+        value={form.verifyPassword}
+        onChangeText={(verifyPassword) => {
+          setForm((prev) => ({ ...prev, verifyPassword: verifyPassword }));
         }}
         label="Password"
         secureTextEntry={true}

@@ -33,6 +33,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "mpn_reactnative_food_app",
+          "organization": "medikea"
+        }
       ]
     ],
     "experiments": {

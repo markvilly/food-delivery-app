@@ -1,5 +1,12 @@
-import { CreateUserParams } from "@/type";
-import { Account, Avatars, Client, Databases, ID } from "react-native-appwrite";
+import { CreateUserParams, SignInParams } from "@/type";
+import {
+  Account,
+  Avatars,
+  Client,
+  Databases,
+  ID,
+  Query,
+} from "react-native-appwrite";
 
 export const appWriteConfig = {
   endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
@@ -17,7 +24,7 @@ client
   .setPlatform(appWriteConfig.platform);
 
 export const account = new Account(client);
-export const database = new Databases(client);
+export const databases = new Databases(client);
 const avatars = new Avatars(client);
 
 export const createUser = async ({
@@ -26,9 +33,51 @@ export const createUser = async ({
   password,
 }: CreateUserParams) => {
   try {
+    // create a new user
     const newAccount = await account.create(ID.unique(), email, password, name);
+    if (!newAccount) throw Error;
+
+    await signIn({ email, password });
+
+    const avatarURL = avatars.getInitialsURL(name);
+
+    return await databases.createDocument(
+      appWriteConfig.databaseID,
+      appWriteConfig.userCollectionID,
+      ID.unique(),
+      { name, email, accountID: newAccount.$id, avatar: avatarURL },
+    );
   } catch (error) {
     throw new Error(error as string);
   } finally {
+  }
+};
+
+export const signIn = async ({ email, password }: SignInParams) => {
+  try {
+    const session = await account.createEmailPasswordSession(email, password);
+  } catch (err) {
+    throw new Error(err as string);
+  }
+};
+
+// Getting the details of the currently logged in user
+
+export const getCurrentUser = async () => {
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) throw Error;
+
+    const currentUser = await databases.listDocuments(
+      appWriteConfig.databaseID,
+      appWriteConfig.userCollectionID,
+      [Query.equal("accountID", currentAccount.$id)],
+    );
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
+  } catch (e) {
+    throw new Error(e as string);
   }
 };

@@ -4,6 +4,7 @@ import { signIn } from "@/lib/appwrite";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 
+import * as Sentry from "@sentry/react-native";
 import { Alert, Text, View } from "react-native";
 
 const SignIn = () => {
@@ -18,7 +19,6 @@ const SignIn = () => {
 
     try {
       // Call the apprwite sign in logic
-
       await signIn({
         email,
         password,
@@ -26,7 +26,8 @@ const SignIn = () => {
       Alert.alert("Success", "User has signed in successfully");
       router.replace("/");
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      Alert.alert("Error", error as string);
+      Sentry.captureEvent(error.message);
     } finally {
       setIsSubmitting(false);
     }

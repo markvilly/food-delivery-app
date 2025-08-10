@@ -79,7 +79,6 @@ export default function Index() {
                 />
               </TouchableOpacity>
             </View>
-
             <CartButton />
           </View>
         )}

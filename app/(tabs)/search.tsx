@@ -1,10 +1,14 @@
 import CartButton from "@/components/CartButton";
+import MenuCard from "@/components/MenuCard";
 import { getCategories, getMenu } from "@/lib/appwrite";
+import seed from "@/lib/seed";
 import useAppwrite from "@/lib/useApprite";
 import { cn } from "@/lib/utils";
+import { MenuItem } from "@/type";
+
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
-import { FlatList, Text, View } from "react-native";
+import { Button, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Search = () => {
@@ -32,6 +36,14 @@ const Search = () => {
 
   return (
     <SafeAreaView className="bg-white h-full">
+      <Button
+        title="Seed"
+        onPress={() =>
+          seed().catch((error) =>
+            console.log("Failed to seed the database", error),
+          )
+        }
+      />
       <FlatList
         data={data}
         renderItem={({ item, index }) => {
@@ -43,7 +55,7 @@ const Search = () => {
                 !isFirstRightColumnItem ? "mt-10" : "mt-0",
               )}
             >
-              <Text>Menu Card</Text>
+              <MenuCard item={item as MenuItem} />
             </View>
           );
         }}
